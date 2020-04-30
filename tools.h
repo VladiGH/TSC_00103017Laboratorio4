@@ -50,12 +50,12 @@ void correctConditions(int n,condition *list){
 void leerMallayCondiciones(mesh &m){
     char filename[14];
     ifstream file;
-    float l,u_bar,nu,rho,f;
-    int nnodes,neltos,ndirich_u,ndirich_p;
+    float l,t,k,lambda, nu, psi, alfa,delta,eta;
+    int nnodes,neltos,ndirich_y,ndirich_w;
 
     
-    condition *dirichlet_u_list;
-    condition *dirichlet_p_list;
+    condition *dirichlet_y_list;
+    condition *dirichlet_w_list;
 
     do{
         cout << "Ingrese el nombre del archivo que contiene los datos de la malla: ";
@@ -64,28 +64,28 @@ void leerMallayCondiciones(mesh &m){
     }while(!file);
 
     
-    file >> l >> u_bar >> nu >> rho >> f;
-    file >> nnodes >> neltos >> ndirich_u >> ndirich_p;
+    file >> l >> t >> k >> lambda >> nu >> psi >> alfa >> delta >> eta;
+    file >> nnodes >> neltos >> ndirich_y >> ndirich_w;
 
     
-    m.setParameters(l,u_bar,nu,rho,f);
-    m.setSizes(nnodes,neltos,ndirich_u+ndirich_p);
+    m.setParameters(l,t,k,lambda, nu, psi, alfa,delta,eta);
+    m.setSizes(nnodes,neltos,ndirich_y+ndirich_w);
     m.createData();
 
     
-    dirichlet_u_list = new condition[ndirich_u];
-    dirichlet_p_list = new condition[ndirich_p];
+    dirichlet_y_list = new condition[ndirich_y];
+    dirichlet_w_list = new condition[ndirich_w];
 
     obtenerDatos(file,SINGLELINE,nnodes,INT_FLOAT,m.getNodes());
     obtenerDatos(file,DOUBLELINE,neltos,INT_INT_INT,m.getElements());
-    obtenerDatos(file,DOUBLELINE,ndirich_u,INT_FLOAT,dirichlet_u_list);
-    obtenerDatos(file,DOUBLELINE,ndirich_p,INT_FLOAT,dirichlet_p_list);
+    obtenerDatos(file,DOUBLELINE,ndirich_y,INT_FLOAT,dirichlet_y_list);
+    obtenerDatos(file,DOUBLELINE,ndirich_w,INT_FLOAT,dirichlet_w_list);
 
     file.close();
 
-    updateConditionNodes(ndirich_p,dirichlet_p_list,nnodes);
-    joinConditions(m.getDirichlet(),ndirich_u,ndirich_p,dirichlet_u_list,dirichlet_p_list);
-    correctConditions(ndirich_u+ndirich_p,m.getDirichlet());
+    updateConditionNodes(ndirich_w,dirichlet_w_list,nnodes);
+    joinConditions(m.getDirichlet(),ndirich_y,ndirich_w,dirichlet_y_list,dirichlet_w_list);
+    correctConditions(ndirich_y+ndirich_w,m.getDirichlet());
 
 }
 
