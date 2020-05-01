@@ -72,8 +72,8 @@ Matrix createLocalK(int element,mesh &m){
 
     row4.push_back(D.at(1).at(0)); 
     row4.push_back(D.at(1).at(1));
-    row3.push_back(G.at(1).at(0)); 
-    row3.push_back(G.at(1).at(1));
+    row4.push_back(G.at(1).at(0)); 
+    row4.push_back(G.at(1).at(1));
 
     K.push_back(row1); 
     K.push_back(row2); 
@@ -125,6 +125,12 @@ void assemblyK(element e,Matrix localK,Matrix &K,int nnodes){
     K.at(index3).at(index2) += localK.at(2).at(1);
     K.at(index4).at(index1) += localK.at(3).at(0);
     K.at(index4).at(index2) += localK.at(3).at(1);
+
+    K.at(index3).at(index3) += localK.at(2).at(2);
+    K.at(index3).at(index4) += localK.at(2).at(3);
+    K.at(index4).at(index3) += localK.at(3).at(2);
+    K.at(index4).at(index4) += localK.at(3).at(3);
+
 
 }
 
